@@ -16,6 +16,7 @@ class myDFP
 
 
     const GOOGLE_GPT_URL = 'https://www.googletagservices.com/tag/js/gpt.js';
+    const JQUERY_URL =  "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js";
 
 
     static $errors = array(
@@ -26,6 +27,8 @@ class myDFP
     );
 
     private $slots = [];
+    
+    
 
 
     public function __construct($config)
@@ -36,6 +39,17 @@ class myDFP
     public function init(){
         $this->setNetworkId();
     }
+    
+    public function getHead(){
+        $scripts = [];
+        $scripts[] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>';
+        $scripts[] = '<script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>';
+        $scripts[] = '<script>var myDfp = {networkId : "'.$this->networkId.'"};</script>';
+        $scripts[] = '<script src="js/mydfp.js"></script>';
+        
+        
+        return implode("\n",$scripts);
+    }
 
     public function displayAd($placement){
         $slot = $this->getSlot($placement);
@@ -44,12 +58,17 @@ class myDFP
 
         $slotId = (isset($slot['endless']) && $slot['endless'] === true) ? md5($slotCode.rand()) : md5($slotCode);
 
-        $dataAttributes = [];
-        $dataAttributes[] = $this->getSlotDataAttribute($slot, 'code');
-        $dataAttributes[] = $this->getSlotDataAttribute($slot, 'code');
+        $slotAttributes = [];
+        $slotAttributes['class'] = 'mydfp';
+        $slotAttributes['id'] = $slotId;
+        $slotAttributes['data-slot-code'] = $slotCode;
+        $slotAttributes['data-slot-sizes'] = $this->getSlotSizes($slot);
+        
+        
+       
 
         $code = '<!-- '.$slot['code'].' -->'."\n";
-        $code .= '<div id="'.$slotId.'" data-slot-code="'.$slot['code'].'" data-slot-size="'..'"></div>';
+        $code .= '<div '.$this->getSlotAttributesStr($slotAttributes).'></div>';
 
         return $code;
     }
@@ -68,6 +87,9 @@ class myDFP
         }
         throw new Exception(self::$errors['SLOT_NOT_FOUND']);
     }
+    
+  
+    
 
     private function getSlotCode($slot){
         if (!empty($slot['code'])){
@@ -82,12 +104,19 @@ class myDFP
         }
         return implode('|',$slot['sizes']);
     }
-
-    private function getSlotDataAttribute($slot, $name){
-        if (!empty($slot[$name])){
-            return 'data-slot-'.$name.'="'.$slot[$name].'"';
+    
+    private function getSlotAttributesStr($slotAttrs){
+        $attribs = [];
+        
+        foreach ($slotAttrs as $attrName=>$attrValue){
+            if (!empty($attrValue)){
+                $attribs[] = $attrName.'="'.$attrValue.'"';
+            }            
         }
+        return implode(' ',$attribs);
     }
+
+  
 
 
 

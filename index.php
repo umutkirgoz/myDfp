@@ -22,12 +22,13 @@ $dfp->init();
 <html>
 <head>
 
-
+<?php echo $dfp->getHead();?>
 </head>
 
 <body>
+<?php echo $dfp->displayAd('toproll');?>
+
+    
 <?php echo $dfp->displayAd('sidebar-1');?>
-
-
 </body>
 </html>

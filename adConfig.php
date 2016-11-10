@@ -22,7 +22,24 @@ $config = [
             'lazy'  =>  false,
             'endless' => false,
             'mapping' => ''
-        ]
+        ],
+        'toproll' => [
+            'code'  => '01_Mynet_AnaSayfa_Genel_RichMedia_Toproll_1',
+            'sizes' => [
+                '970, 250'                
+            ],
+            'type'  =>  'normal',
+            'lazy'  =>  false,
+            'endless' => false,
+            'mapping' => ''
+        ],
+        'mansetkutu1' => [
+            'code'  => '01_Mynet_AnaSayfa_Genel_Advertorial_MansetKutu_1',           
+            'type'  =>  'oop',
+            'lazy'  =>  false,
+            'endless' => false,
+            'mapping' => ''
+        ],
 
 
     ]
